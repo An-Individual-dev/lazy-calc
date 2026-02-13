@@ -25,14 +25,24 @@ body {
 
 .display {
     background: #111;
-    height: 80px;
+    min-height: 90px;
     border-radius: 20px;
-    padding: 20px;
-    font-size: 28px;
+    padding: 15px;
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    overflow-x: auto;
+    flex-direction: column;
+    justify-content: center;
+    text-align: right;
+    overflow: hidden;
+}
+
+.previous {
+    font-size: 16px;
+    opacity: 0.6;
+}
+
+.current {
+    font-size: 26px;
+    margin-top: 5px;
 }
 
 .buttons {
@@ -50,18 +60,22 @@ button {
     font-size: 20px;
     color: white;
     cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    box-shadow: 0 5px 0 #12345a;
 }
 
 button:active {
-    transform: scale(0.95);
+    transform: translateY(5px);
+    box-shadow: 0 0 0 #12345a;
 }
 
 .equal {
     background: #bc0000;
+    box-shadow: 0 5px 0 #700000;
 }
 
-.wide {
-    grid-column: span 2;
+.equal:active {
+    box-shadow: 0 0 0 #700000;
 }
 </style>
 </head>
@@ -69,7 +83,10 @@ button:active {
 <body>
 
 <div class="calculator">
-    <div class="display" id="display">0</div>
+    <div class="display">
+        <div class="previous" id="previous"></div>
+        <div class="current" id="current">0</div>
+    </div>
 
     <div class="buttons">
         <button onclick="append('(')">(</button>
@@ -100,48 +117,61 @@ button:active {
 </div>
 
 <script>
-let display = document.getElementById("display");
+let current = document.getElementById("current");
+let previous = document.getElementById("previous");
 
 function append(value) {
-    if (display.innerText === "0" || isMessage(display.innerText)) {
-        display.innerText = value;
+    if (current.innerText === "0" || isMessage(current.innerText)) {
+        current.innerText = value;
     } else {
-        display.innerText += value;
+        current.innerText += value;
     }
 }
 
 function clearDisplay() {
-    display.innerText = "0";
+    current.innerText = "0";
+    previous.innerText = "";
 }
 
 function isMessage(text) {
-    return isNaN(text);
+    return text.includes("bro") || 
+           text.includes("Bruh") || 
+           text.includes("idk") || 
+           text.includes("negative") || 
+           text.includes("fraction");
 }
 
 function calculate() {
     try {
-        let expression = display.innerText;
+        let expression = current.innerText;
         let result = eval(expression);
 
         if (!Number.isFinite(result)) {
-            display.innerText = "Nice try.";
+            current.innerText = "Invalid input.";
             return;
         }
 
+        previous.innerText = expression;
+
+        // STRICTLY result-based logic
         if (!Number.isInteger(result)) {
-            display.innerText = "bruh ask something easier. I don't wanna calculate fractions!";
-        } else if (result === 0) {
-            display.innerText = "Bruh it's 0";
-        } else if (result > 0 && result < 100) {
-            display.innerText = "it's easy bro. do it yourself.";
-        } else if (result > 100) {
-            display.innerText = "idk ask chatgpt";
-        } else if (result < 0) {
-            display.innerText = "bruh why negative values?!";
+            current.innerText = "bruh ask something easier. I don't wanna calculate fractions!";
+        } 
+        else if (result === 0) {
+            current.innerText = "Bruh it's 0";
+        } 
+        else if (result > 0 && result < 100) {
+            current.innerText = "it's easy bro. do it yourself.";
+        } 
+        else if (result > 100) {
+            current.innerText = "idk ask chatgpt";
+        } 
+        else if (result < 0) {
+            current.innerText = "bruh why negative values?!";
         }
 
     } catch {
-        display.innerText = "Invalid input.";
+        current.innerText = "Invalid input.";
     }
 }
 </script>
