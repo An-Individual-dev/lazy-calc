@@ -134,39 +134,77 @@ function clearDisplay() {
 }
 
 function isMessage(text) {
-    return text.includes("bro") || 
-           text.includes("Bruh") || 
-           text.includes("idk") || 
-           text.includes("negative") || 
-           text.includes("fraction");
+    return ["bro","Bruh","idk","negative","fraction","FRACTIONS!!","valo","Ask","Even","Go to","Ha ha"].some(sub => text.includes(sub));
 }
 
 function calculate() {
     try {
         let expression = current.innerText;
-        let result = eval(expression);
 
-        if (!Number.isFinite(result)) {
-            current.innerText = "Invalid input.";
+        // Easter egg equations
+        const eqEggs = {
+            "2+2": "Ask einstein",
+            "2+3": "Even a 4yr old can solve this.",
+            "1+1": "Go to primary school!!!",
+            "6+7": "Ha ha 67",
+            "6+9": "Ekhono time ache. Valo hoye jao"
+        };
+        if(eqEggs[expression]) {
+            previous.innerText = expression;
+            current.innerText = eqEggs[expression];
             return;
         }
 
+        // Division by zero detection
+        if(expression.includes("/0")) {
+            previous.innerText = expression;
+            current.innerText = "you just broke reality. Nice job";
+            return;
+        }
+
+        let result = eval(expression);
+
         previous.innerText = expression;
 
-        // STRICTLY result-based logic
-        if (!Number.isInteger(result)) {
-            current.innerText = "bruh ask something easier. I don't wanna calculate fractions!";
-        } 
-        else if (result === 0) {
+        // Easter egg numbers
+        const numEggs = {
+            69: "valo hoye jao bro",
+            67: "bro, be mature!",
+            420: "it's 2026 bro.",
+            3.1416: "are you trying to calculate pi??"
+        };
+        if(numEggs[result]) {
+            current.innerText = numEggs[result];
+            return;
+        }
+
+        // Fractions
+        if(!Number.isInteger(result)) {
+            current.innerText = "FRACTIONS!! I HATE FRACTIONS!!!";
+            return;
+        }
+
+        // Random insults for results between 0 and 100
+        if(result > 0 && result < 100) {
+            const insults = [
+                "Did you even learn math?!",
+                "Even your dog could do better.",
+                "Even a potato could do better",
+                "4yr old > you",
+                "Error 404: Intelligence not found"
+            ];
+            current.innerText = insults[Math.floor(Math.random() * insults.length)];
+            return;
+        }
+
+        // Other results
+        if(result === 0) {
             current.innerText = "Bruh it's 0";
         } 
-        else if (result > 0 && result < 100) {
-            current.innerText = "it's easy bro. do it yourself.";
-        } 
-        else if (result > 100) {
+        else if(result >= 100) {
             current.innerText = "idk ask chatgpt";
         } 
-        else if (result < 0) {
+        else if(result < 0) {
             current.innerText = "bruh why negative values?!";
         }
 
