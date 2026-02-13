@@ -1,1 +1,150 @@
-<h1>lazy Calculator</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lazy Calculator</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    background: black;
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: white;
+}
+
+.calculator {
+    width: 340px;
+}
+
+.display {
+    background: #111;
+    height: 80px;
+    border-radius: 20px;
+    padding: 20px;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    overflow-x: auto;
+}
+
+.buttons {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+button {
+    background: #1d508b;
+    border: none;
+    border-radius: 18px;
+    padding: 18px;
+    font-size: 20px;
+    color: white;
+    cursor: pointer;
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+.equal {
+    background: #bc0000;
+}
+
+.wide {
+    grid-column: span 2;
+}
+</style>
+</head>
+
+<body>
+
+<div class="calculator">
+    <div class="display" id="display">0</div>
+
+    <div class="buttons">
+        <button onclick="append('(')">(</button>
+        <button onclick="append(')')">)</button>
+        <button onclick="append('%')">%</button>
+        <button onclick="clearDisplay()">AC</button>
+
+        <button onclick="append('7')">7</button>
+        <button onclick="append('8')">8</button>
+        <button onclick="append('9')">9</button>
+        <button onclick="append('/')">÷</button>
+
+        <button onclick="append('4')">4</button>
+        <button onclick="append('5')">5</button>
+        <button onclick="append('6')">6</button>
+        <button onclick="append('*')">×</button>
+
+        <button onclick="append('1')">1</button>
+        <button onclick="append('2')">2</button>
+        <button onclick="append('3')">3</button>
+        <button onclick="append('-')">-</button>
+
+        <button onclick="append('0')">0</button>
+        <button onclick="append('.')">.</button>
+        <button class="equal" onclick="calculate()">=</button>
+        <button onclick="append('+')">+</button>
+    </div>
+</div>
+
+<script>
+let display = document.getElementById("display");
+
+function append(value) {
+    if (display.innerText === "0" || isMessage(display.innerText)) {
+        display.innerText = value;
+    } else {
+        display.innerText += value;
+    }
+}
+
+function clearDisplay() {
+    display.innerText = "0";
+}
+
+function isMessage(text) {
+    return isNaN(text);
+}
+
+function calculate() {
+    try {
+        let expression = display.innerText;
+        let result = eval(expression);
+
+        if (!Number.isFinite(result)) {
+            display.innerText = "Nice try.";
+            return;
+        }
+
+        if (!Number.isInteger(result)) {
+            display.innerText = "bruh ask something easier. I don't wanna calculate fractions!";
+        } else if (result === 0) {
+            display.innerText = "Bruh it's 0";
+        } else if (result > 0 && result < 100) {
+            display.innerText = "it's easy bro. do it yourself.";
+        } else if (result > 100) {
+            display.innerText = "idk ask chatgpt";
+        } else if (result < 0) {
+            display.innerText = "bruh why negative values?!";
+        }
+
+    } catch {
+        display.innerText = "Invalid input.";
+    }
+}
+</script>
+
+</body>
+</html>
